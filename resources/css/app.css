@@ -1,11 +1,310 @@
-@import 'tailwindcss';
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background-color: #0b0f19; /* Dark Mode Theme */
+    color: #ffffff;
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* Latar Belakang & Efek Blur Biru (Seperti di referensi tapi versi Dark Mode) */
+.background-fx {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    background: radial-gradient(circle at center, #111827 0%, #030712 100%);
+}
+
+.blue-blob {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+    width: 45vw;
+    height: 45vw;
+    max-width: 600px;
+    max-height: 600px;
+    background: #3b82f6;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    filter: blur(100px);
+    opacity: 0.35;
+    animation: morph 8s ease-in-out infinite alternate;
+}
+
+@keyframes morph {
+    0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+    100% { border-radius: 60% 40% 30% 70% / 60% 50% 40% 50%; }
+}
+
+/* 3D Canvas Layer */
+#canvas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1; /* Di atas background-fx, di bawah UI */
+    pointer-events: auto;
+}
+
+/* UI Layer Utama */
+#ui-layer {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    z-index: 10;
+    pointer-events: none; /* Agar 3D di belakang bisa di-drag */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 8%;
+    pointer-events: auto;
+}
+
+.navbar .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover, .nav-links li a.active {
+    color: #ffffff;
+}
+
+.nav-links li a.active {
+    border-bottom: 2px solid #3b82f6; /* Aksen biru */
+    padding-bottom: 5px;
+}
+
+/* Hero Layout */
+.hero-container {
+    flex: 1;
+    display: flex;
+    padding: 0 8%;
+    align-items: center;
+}
+
+.text-content {
+    max-width: 650px;
+    pointer-events: auto; /* Teks dan tombol bisa diklik */
+    animation: slideUp 1.2s ease-out;
+}
+
+h1.title {
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 30px;
+    color: #ffffff;
+    letter-spacing: -1.5px;
+}
+
+.highlight {
+    color: #3b82f6; /* Warna biru sesuai referensi */
+    text-shadow: 0 0 30px rgba(59, 130, 246, 0.4); /* Efek glow */
+}
+
+/* Button CTA */
+.btn-cta {
+    background: #3b82f6; /* Warna solid sesuai referensi */
+    color: #ffffff;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 8px; /* Sudut sedikit kotak */
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+}
+
+.btn-cta:hover {
+    transform: translateY(-3px);
+    background: #2563eb;
+    box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.6);
+}
+
+/* Social Icons */
+.social-icons {
+    margin-top: 80px;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.social-icons a {
+    color: #94a3b8;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.social-icons a:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* --- Skill Leveling Section --- */
+#skills-section {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    padding: 100px 8%;
+    background: #0b0f19; /* Solid bg menutupi 3D jika di scroll */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.skills-container {
+    background: rgba(11, 15, 25, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 60px 80px;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+}
+
+.section-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.section-subtitle {
+    color: #94a3b8;
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 1.1rem;
+}
+
+.skills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.skill-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skill-info {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #e2e8f0;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    /* Efek latar bar transparan berembun */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #3b82f6; /* Garis progress berwarna biru */
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8); /* Efek glowing shadow */
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsivitas Layar (Mobile & Tablet) */
+@media (max-width: 1024px) {
+    h1.title { font-size: 4rem; }
+    .blue-blob { width: 60vw; height: 60vw; }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+    .nav-links {
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .hero-container {
+        padding: 40px 20px;
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+    .text-content {
+        /* Memberikan latar belakang glass agar teks terbaca jelas di atas model 3D di layar sempit */
+        background: rgba(11, 15, 25, 0.6);
+        backdrop-filter: blur(12px);
+        padding: 30px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    h1.title {
+        font-size: 3rem;
+    }
+    .blue-blob {
+        top: 30%;
+        right: 50%;
+        transform: translateX(50%);
+        width: 80vw;
+        height: 80vw;
+    }
+    .skills-container {
+        padding: 40px 30px;
+    }
+    .section-title {
+        font-size: 2.5rem;
+    }
 }
